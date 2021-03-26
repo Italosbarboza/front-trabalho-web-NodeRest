@@ -80,8 +80,8 @@ export default function Main () {
 
     return(
         <div class='formCenter'>
-        <Form>
-        <h1>Sistema de Controle de Alunos</h1>
+          <div id="area">
+        <Form id="formulario">
         <Row form>
           <Col md={5}>
             <FormGroup>
@@ -174,6 +174,7 @@ export default function Main () {
             <Button onClick={addNewCard}>Inserir</Button>
         </div>
       </Form>
+      </div>
       <Table striped className="tableUsers">
       <thead>
         <tr>
