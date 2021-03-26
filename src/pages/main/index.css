@@ -1,0 +1,56 @@
+body {
+    margin: 0 auto;
+    width: 50%; /* Valor da Largura */
+}
+
+h1 {
+    margin-left: -18%;
+}
+
+.formCenter {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.formCenter .matricula {
+    margin-left: -73%;
+}
+
+.formCenter .nome {
+    margin-left: -83%;
+}
+
+.formCenter .dataNascimento {
+    margin-left: -43%;
+}
+
+.formCenter .email {
+    margin-left: -83%;
+}
+
+.formCenter .ddd {
+    margin-left: -63%;
+}
+
+.formCenter .telefone {
+    margin-left: -72%;
+}
+
+.formCenter .butoes {
+    margin-left: 70%;
+}
+
+.formCenter .campus {
+    margin-left: -10%;
+}
+
+.formCenter .curso {
+    margin-left: -10%;
+}
+
+.tableUsers {
+    margin-top: 10%;
+}
