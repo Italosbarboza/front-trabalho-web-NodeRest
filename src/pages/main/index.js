@@ -80,27 +80,27 @@ export default function Main () {
 
     return(
         <div class='formCenter'>
-          <div id="area">
-        <Form id="formulario">
-        <Row form>
-          <Col md={5}>
-            <FormGroup>
-              <Label className="matricula">matricula</Label>
-              <Input type="matricula" onChange={handleChangeMatricula} name="matricula" id="examplematricula" placeholder="Adicione a matrícula do aluno" />
-            </FormGroup>
-          </Col>
-          <Col md={6}>
-            <FormGroup>
-              <Label className="nome" for="examplenome">nome</Label>
-              <Input type="nome" onChange={handleChangeNome} name="nome" id="examplenome" placeholder="Adicione o nome do aluno" />
-            </FormGroup>
-          </Col>
+        <div id="area">
+          <Form id="formulario">
+            <Row form>
+              <Col md={5}>
+                <FormGroup>
+                  <Label className="matricula">matricula</Label>
+                  <Input type="matricula" onChange={handleChangeMatricula} id="examplematricula" placeholder="Adicione a matrícula do aluno" />
+                </FormGroup>
+              </Col>
+        <Col md={7}>
+          <FormGroup>
+            <Label className="nome" for="examplenome">nome</Label>
+            <Input type="nome" onChange={handleChangeNome} name="nome" id="examplenome" placeholder="Adicione o nome do aluno" />
+          </FormGroup>
+        </Col>
         </Row>
         
         <Row form>
           <Col md={5}>
             <FormGroup>
-              <Label className="dataNascimento" for="exampledataNascimento">data de Nascimento</Label>
+              <Label className="dataNascimento" for="exampledataNascimento">Nascimento</Label>
               <Input 
                 onChange={handleChangeNascimento}
                 type="date"
@@ -110,7 +110,7 @@ export default function Main () {
         />
             </FormGroup>
           </Col>
-          <Col md={6}>
+          <Col md={7}>
             <FormGroup>
               <Label className="email" for="exampleemail">email</Label>
               <Input onChange={handleChangeEmail} type="email" name="email" id="exampleemail" placeholder="Adicione o email do aluno" />
@@ -168,10 +168,8 @@ export default function Main () {
             </FormGroup>  
           </Col>
         </Row>
-
-
         <div className="butoes">
-            <Button onClick={addNewCard}>Inserir</Button>
+            <Button onClick={addNewCard} className="butaoInserir">Inserir</Button>
         </div>
       </Form>
       </div>

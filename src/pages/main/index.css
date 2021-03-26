@@ -1,49 +1,33 @@
-
-#area #formulario
-{
-  position:absolute;
-  left: 20%;
-  right: 20%;
-  top: 5%;
-  border-radius: 2%;
-  border-style: groove;}
-
-.formCenter .matricula {
-    margin-left: -73%;
+.formCenter {
+}
+#area {
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 33%;
+    top: 20%;
+    border-width:1px;  
+    border-style: solid;
+    border-color: rgb(63, 63, 228);
 }
 
-.formCenter .nome {
-    margin-left: -83%;
+#area #formulario {
+  position: absolute;
+  margin-top: 2%;
+  margin-bottom: 33%;
+  margin-left: 2%;
+  margin-right: 2%;
+  
 }
 
-.formCenter .dataNascimento {
-    margin-left: -43%;
+#area #formulario Label {
+    margin-right: 100%;
 }
 
-.formCenter .email {
-    margin-left: -83%;
+.butoes {
+    background-color: red;
 }
 
-.formCenter .ddd {
-    margin-left: -63%;
-}
-
-.formCenter .telefone {
-    margin-left: -72%;
-}
-
-.formCenter .butoes {
-    margin-left: 70%;
-}
-
-.formCenter .campus {
-    margin-left: -10%;
-}
-
-.formCenter .curso {
-    margin-left: -10%;
-}
-
-.tableUsers {
-    margin-top: 10%;
+.butoes .butaoInserir{
+    margin-left: 95%;
 }
