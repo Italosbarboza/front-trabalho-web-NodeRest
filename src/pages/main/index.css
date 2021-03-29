@@ -1,33 +1,71 @@
+* {
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
 .formCenter {
+    margin-top: 3px;
 }
-#area {
+
+.formCenter .header {
+    display: flex;
     position: absolute;
-    left: 20%;
-    right: 20%;
-    bottom: 33%;
-    top: 20%;
-    border-width:1px;  
-    border-style: solid;
-    border-color: rgb(63, 63, 228);
+    right: 1%;
+    top: 1%;    
 }
 
-#area #formulario {
-  position: absolute;
-  margin-top: 2%;
-  margin-bottom: 33%;
-  margin-left: 2%;
-  margin-right: 2%;
-  
+.formCenter .area {
+    display: flex;
+    margin-top: 7%;
+    padding-bottom: 80%;
+    justify-content: center;
+    align-items: center;
 }
 
-#area #formulario Label {
-    margin-right: 100%;
+.formCenter .area .formulario {
+    width: 50%;
+    padding-bottom: 5%;
+    padding-top: 3%;
+    padding-left: 3%;
+    padding-right: 3%;
+    border-style:dashed;
+    border-radius: 2px;
+    border: 1px solid #cfecff;
 }
 
-.butoes {
-    background-color: red;
+.formCenter .area .formulario .titulo {
+    display: flex;
+    margin-top: -4%;
+    margin-bottom: 5%;
+    margin-left: -5%;
+    color: red;
+   
 }
 
-.butoes .butaoInserir{
-    margin-left: 95%;
+.formCenter .area .formulario Label {
+    margin-right: 90%;
+    font-weight: bolder;
+
 }
+
+.formCenter .area .formulario .butoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5%;
+    margin-bottom: -9%;
+}
+
+.formCenter .area .formulario .butoes .butaoInserir {
+   margin-left: 1%; 
+}
+
+.formCenter .tableUsers {
+    display: absolute;
+    margin-top: -77%;
+    width: 70%;
+    margin-left: 14%;
+}
+
+
+
