@@ -8,16 +8,21 @@
     margin-top: 3px;
 }
 
+.formCenter span {
+    color: red;
+    font-family: unset;
+}
+
 .formCenter .header {
     display: flex;
     position: absolute;
     right: 1%;
-    top: 1%;    
+    top: 0%;    
 }
 
 .formCenter .area {
     display: flex;
-    margin-top: 7%;
+    margin-top: 4%;
     padding-bottom: 80%;
     justify-content: center;
     align-items: center;
@@ -39,7 +44,7 @@
     margin-top: -4%;
     margin-bottom: 5%;
     margin-left: -5%;
-    color: red;
+    color: black;
    
 }
 

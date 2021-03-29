@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Row, Button, Form, FormGroup, Label, Input, CustomInput, Table } from 'reactstrap';
+import { Col, Row, Button, FormGroup, Label, Input, CustomInput, Table } from 'reactstrap';
 import { makeStyles } from '@material-ui/core/styles';
 
+import schema from './schema';
+
+import { Form } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { Formik, Field } from 'formik';
+ 
 import './index.css';
 import api from "../../services/api";
 import InfoIcon from '@material-ui/icons/Info';
@@ -39,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Main () {
 
     const classes = useStyles();
-    const [matricula, setMatricula] = useState();
     const [nome, setNome] = useState();
     const [dataNascimento, setDataNascimento] = useState();
     const [email, setEmail] = useState();
@@ -55,6 +61,7 @@ export default function Main () {
     const [modalStyle] = useState(getModalStyle);
     const [open, setOpen] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+    const [openMatricula, setOpenMatricula] = useState(false);
     const [matriculaDelete, setMatriculaDelete] = useState();
 
     
@@ -91,10 +98,19 @@ export default function Main () {
       setOpenDelete(false);
     };
 
+    const handleOpenMatricula = () => {
+      setOpenMatricula(true);
+    };
+
+    const handleCloseMatricula = () => {
+      setOpenMatricula(false);
+    };
+
+
     const handleDeleteMatriculaAndClose = () => {
       const usersTemp = [];
       api
-          .delete(`/api/alunos/${matricula}`)
+          .delete(`/api/alunos/${matriculaDelete}`)
           .then(response => {
             users.map(user => {
               if(user.matricula !== response.data.matricula) {
@@ -119,6 +135,16 @@ export default function Main () {
       </div>
     );
 
+    const bodyMatricula = (
+      <div style={modalStyle} className={classes.paper}>
+        <h4 id="simple-modal-title">Atenção</h4>
+        <hr/>
+        <h2>Matrícula já existente. Insira uma nova matrícula</h2>
+        <hr/>
+        <Button style={{'margin-left': '80%'}} onClick={() => {handleCloseMatricula() }}>Fechar</Button>
+      </div>
+    );
+
     const deleteBody = (
       <div style={modalStyle} className={classes.paper}>
         <p id="simple-modal-title">Solicitação de Confirmação</p>
@@ -132,10 +158,6 @@ export default function Main () {
       </div>
     );
 
-    function handleChangeMatricula(event) {
-        setMatricula(event.target.value);
-    }
-
     function handleChangeNome(event) {
         setNome(event.target.value);
     }
@@ -145,6 +167,7 @@ export default function Main () {
     }
 
     function handleChangeEmail(event) {
+      console.log(event.target.value);
         setEmail(event.target.value);
     }
 
@@ -159,33 +182,6 @@ export default function Main () {
     function handleChangeOperadora(event) {
         setOperadora(event.target.value);
         console.log(event.target.value);
-    }
-
-    const addNewCard = () => {
-      const alunoNovo = { 
-                      "matricula": matricula, 
-	                    "nome": nome, 
-	                    "data_nascimento": dataNascimento,
-	                    "id_campus": idCampus,
-	                    "id_curso": idCurso,
-	                    "telefone":
-		                  {
-			                  "operadora": operadora,
-			                  "ddd": ddd,
-			                  "numero": telefone
-		                  }
-                    }
-        const usersTemp = [];
-        api
-          .post(`/api/alunos`, alunoNovo)
-          .then(response => {
-            users.map(user => {
-                usersTemp.push(user);
-            })
-            usersTemp.push(response.data);
-            setUsers(usersTemp);
-            
-        });
     }
 
     const removeAluno = (matricula) => {
@@ -219,8 +215,78 @@ export default function Main () {
         setIdCurso(e.target.value);
     }
 
+    function handleReset (values) {
+        console.log(values)
+        values.matricula= '';
+        values.nome = '';
+        values.dataNascimento = '';
+        values.email = '';
+        values.ddd= '';
+        values.telefone = '';
+        values.operadora = 'Oi';
+        values.campus = '';
+        values.curso = '';
+    };
+
+    function onSubmit (values, { resetForm }) {
+      const alunoNovo = { 
+                      "matricula": values.matricula, 
+	                    "nome": values.nome, 
+	                    "data_nascimento": values.dataNascimento,
+	                    "id_campus": values.campus,
+	                    "id_curso": values.curso,
+	                    "telefone":
+		                  {
+			                  "operadora": values.operadora,
+			                  "ddd": values.ddd,
+			                  "numero": values.telefone
+		                  }
+                    }
+        
+        const usersTemp = [];
+        api
+          .post(`/api/alunos`, alunoNovo)
+          .then(response => {
+            users.map(user => {
+                usersTemp.push(user);
+                resetForm({});
+            })
+            usersTemp.push(response.data);
+            setUsers(usersTemp);
+            
+        }).catch(function (error) {
+          handleOpenMatricula();
+        })
+    }
+
+    function validate(values) {
+        const errors = {};
+        if(!values.matricula) {
+          errors.matricula = 'Matricula é obrigatória';
+        }
+        if(!values.nome) {
+          errors.nome = 'nome é obrigatória';
+        }
+        if(!values.email) {
+          errors.email = 'Email é obrigatória';
+        }
+        if(!values.ddd) {
+          errors.ddd = 'ddd é obrigatória';
+        }
+        if(!values.telefone) {
+          errors.telefone = 'telefone é obrigatória';
+        }
+        if(!values.operadora) {
+          errors.operadora = 'operadora é obrigatória';
+        }
+
+        return errors;
+
+    }
+
     return(
         <div class='formCenter'>
+          
           <header className='header'>
             <InfoIcon onClick={handleOpen}></InfoIcon>
 
@@ -234,103 +300,150 @@ export default function Main () {
               </Modal>
           </header>
         <div className='area'>
-          <Form className="formulario">
-            <h3 className="titulo">Formulário de Cadastro de Aluno</h3>
-            <Row form>
-              <Col md={5}>
+          <Formik
+            onSubmit = {onSubmit}
+            onReset={handleReset}
+            validationSchema = {schema}
+            validateOnMount
+            initialValues= {{
+              matricula: '',
+              nome : '',
+              dataNascimento : '',
+              email : '',
+              ddd: '',
+              telefone : '',
+              operadora : 'Oi',
+              campus : '1',
+              curso : '1',
+            }}
+            render= {({ values, handleChange, handleSubmit, errors, resetForm }) => (
+              <Form className="formulario" onSubmit={handleSubmit}>
+              <h3 className="titulo">Formulário de Cadastro de Aluno</h3>
+              <Row form>
+                <Col md={5}>
+                  
+  
                 <FormGroup>
                   <Label className="matricula">matricula</Label>
-                  <Input type="matricula" onChange={handleChangeMatricula} id="examplematricula" placeholder="Adicione a matrícula do aluno" />
+                  <Input name="matricula" value={values.matricula} onChange={handleChange} id="examplematricula" placeholder="Adicione a matrícula do aluno" />
+                  {errors.matricula && (
+                    <span>{errors.matricula}</span>
+                  )}
                 </FormGroup>
-              </Col>
-        <Col md={7}>
-          <FormGroup>
-            <Label className="nome" for="examplenome">nome</Label>
-            <Input type="nome" onChange={handleChangeNome} name="nome" id="examplenome" placeholder="Adicione o nome do aluno" />
-          </FormGroup>
-        </Col>
-        </Row>
-        
-        <Row form>
-          <Col md={5}>
-            <FormGroup>
-              <Label className="dataNascimento" for="exampledataNascimento">Nascimento</Label>
-              <Input 
-                onChange={handleChangeNascimento}
-                type="date"
-                name="date"
-                id="exampleDate"
-                placeholder="date placeholder"
-        />
-            </FormGroup>
-          </Col>
+  
+  
+  
+                </Col>
           <Col md={7}>
             <FormGroup>
-              <Label className="email" for="exampleemail">email</Label>
-              <Input onChange={handleChangeEmail} type="email" name="email" id="exampleemail" placeholder="Adicione o email do aluno" />
+              <Label className="nome" for="examplenome">nome</Label>
+              <Input type="nome" name="nome" value={values.nome} onChange={handleChange} name="nome" id="examplenome" placeholder="Adicione o nome do aluno" />
+              {errors.nome && (
+                    <span>{errors.nome}</span>
+                  )}
             </FormGroup>
           </Col>
-        </Row>
-        
-        <Row form>
-          <Col md={2}>
-            <FormGroup>
-              <Label className="ddd" for="exampleCity">DDD</Label>
-              <Input onChange={handleChangeDdd} type="text" name="city" id="ddd" placeholder="DDD"/>
-            </FormGroup>
-          </Col>
-          <Col md={5}>
-            <FormGroup>
-              <Label className="telefone" for="exampleState">Telefone</Label>
-              <Input onChange={handleChangeTelefone} type="text" name="state" id="exampleState" placeholder="Telefone"/>
-            </FormGroup>
-          </Col>
-          <Col md={2}>
-            <FormGroup>
-              <Label  for="exampleZip">Operadora</Label>
-                <CustomInput onChange={handleChangeOperadora} type="select" id="exampleCustomSelect" name="customSelect">
-                    <option value="">Opções</option>
-                    <option value="Oi">Oi</option>
-                    <option value="Tim">Tim</option>
-                    <option value="Claro">Claro</option>
-                    <option value="Vivo">Vivo</option>
-                </CustomInput>
-            </FormGroup>  
-          </Col>
-        </Row>
-
-
-
-        <Row form>
-          <Col md={5}>
-            <FormGroup>
-            <Label className="campus" for="campus">Campus</Label>
-            <CustomInput onChange={handleChangeCampus} type="select" id="exampleCustomSelect" name="customSelect">
-                {campi.map((campus) => (
-                         <option value={campus.id_campus}>{campus.nome}</option>
-                ))}
-                </CustomInput>
-            </FormGroup>
-          </Col>
-          <Col md={5}>
-            <FormGroup>
-              <Label className="curso" for="curso">Curso</Label>
-                <CustomInput onChange={handleChangeCurso} type="select" id="exampleCustomSelect" name="customSelect">
-                    {cursoSelecionado.map((curso) => (
-                         <option value={curso.id_curso}>{curso.nome}</option>
-                        ))}
-                </CustomInput>
-            </FormGroup>  
-          </Col>
-        </Row>
-        <hr/>
-
-        <div className="butoes">
+          </Row>
           
-            <Button onClick={addNewCard} className="butaoLimpar">Limpar</Button>
-            <Button onClick={() => addNewCard()} className="butaoInserir">Inserir</Button>
-        </div>
-      </Form>
+          <Row form>
+            <Col md={5}>
+              <FormGroup>
+                <Label className="dataNascimento">Nascimento</Label>
+                <Input 
+                 name="dataNascimento" 
+                 value={values.dataNascimento} 
+                 onChange={handleChange}
+                  type="date"
+                  id="exampleDate"
+                  placeholder="date placeholder"
+          />
+          {errors.dataNascimento && (
+                    <span>{errors.dataNascimento}</span>
+                  )}
+              </FormGroup>
+            </Col>
+            <Col md={7}>
+              
+            <FormGroup>
+              <Label className="email" for="exampleemail">email</Label>
+              <Input onChange={handleChange} type="email" name="email" value={values.email} id="exampleemail" placeholder="Adicione o email do aluno" />
+              {errors.email && (
+                    <span>{errors.email}</span>
+                  )}
+            </FormGroup>
+  
+  
+            </Col>
+          </Row>
+          
+          <Row form>
+            <Col md={2}>
+              <FormGroup>
+                <Label className="ddd" for="exampleCity">DDD</Label>
+                <Input onChange={handleChange} type="text" name="ddd" value={values.ddd} id="ddd" placeholder="DDD"/>
+                {errors.ddd && (
+                    <span>{errors.ddd}</span>
+                  )}
+              </FormGroup>
+            </Col>
+            <Col md={5}>
+              <FormGroup>
+                <Label className="telefone" for="exampleState">Telefone</Label>
+                <Input onChange={handleChange} type="text" name="telefone" value={values.telefone} id="exampleState" placeholder="Telefone"/>
+                {errors.telefone && (
+                    <span>{errors.telefone}</span>
+                  )}
+              </FormGroup>
+            </Col>
+            <Col md={2}>
+              <FormGroup>
+                <Label  for="exampleZip">Operadora</Label>
+                  <CustomInput onChange={handleChange} name="operadora" value={values.operadora} type="select">
+                      <option value="Oi">Oi</option>
+                      <option value="Tim">Tim</option>
+                      <option value="Claro">Claro</option>
+                      <option value="Vivo">Vivo</option>
+                  </CustomInput>
+              </FormGroup>  
+            </Col>
+          </Row>
+  
+  
+  
+          <Row form>
+            <Col md={5}>
+              <FormGroup>
+              <Label className="campus" for="campus">Campus</Label>
+              <CustomInput onChange={handleChange} name="campus" value={values.campus} type="select" id="exampleCustomSelect">
+                  {campi.map((campus) => (
+                           <option value={campus.id_campus}>{campus.nome}</option>
+                  ))}
+                  </CustomInput>
+              </FormGroup>
+            </Col>
+            <Col md={5}>
+              <FormGroup>
+                <Label className="curso" for="curso">Curso</Label>
+                  <CustomInput onChange={handleChange} name="curso" value={values.curso} type="select" id="exampleCustomSelect">
+                      {cursoSelecionado.map((curso) => (
+                           <option value={curso.id_curso}>{curso.nome}</option>
+                          ))}
+                  </CustomInput>
+              </FormGroup>  
+            </Col>
+          </Row>
+          <hr/>
+  
+          <div className="butoes">
+            
+              <Button 
+              type="button" onClick={resetForm} type="reset">Limpar</Button>
+              <Button variant="primary" type="submit" className="butaoInserir">Inserir</Button>
+          </div>
+        </Form>
+          )}
+          />
+      
       </div>
      
      <Table striped className="tableUsers">
@@ -359,6 +472,15 @@ export default function Main () {
                 onClose={handleCloseDelete}
               >
                   {deleteBody}
+              </Modal>
+
+              <Modal
+                open={openMatricula}
+                onClose={handleCloseMatricula}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+              >
+                  {bodyMatricula}
               </Modal>
 
       </tbody>
